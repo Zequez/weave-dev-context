@@ -13,6 +13,7 @@
     "pack": "hc app pack dnas --recursive"
   },
   "devDependencies": {
+    "@axiosleo/cli-tool": "^1.6.5",
     "@holochain-open-dev/elements": "0.400.0-rc.0",
     "@holochain-open-dev/profiles": "0.400.0-rc.0",
     "@holochain-open-dev/stores": "0.400.0-rc.0",
@@ -35,7 +36,6 @@
   "peerDependencies": {
     "typescript": "^5.6.3"
   },
-  "dependencies": {
-    "@axiosleo/cli-tool": "^1.6.5"
-  }
+  "trustedDependencies": ["@theweave/cli"]
+
 }

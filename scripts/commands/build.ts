@@ -93,8 +93,8 @@ export default class BuildCommand extends Command {
     }
 
     await clean();
-    // await bulidUi();
-    // await buildCargo();
+    await bulidUi();
+    await buildCargo();
     await generateDna();
     await packDna();
   }

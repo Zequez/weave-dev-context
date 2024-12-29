@@ -2,6 +2,7 @@
 import { App } from '@axiosleo/cli-tool';
 import BuildCommand from './commands/build';
 import DevCommand from './commands/dev';
+import NixCommand from './commands/nix';
 
 const app = new App({
   name: 'wdc', // cli app command name, required
@@ -12,6 +13,7 @@ const app = new App({
 
 app.register(BuildCommand);
 app.register(DevCommand);
+app.register(NixCommand);
 app.start();
 
 // import fs from 'fs';

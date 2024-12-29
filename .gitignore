@@ -1,7 +1,9 @@
 happs/*
-node_modules/*
+node_modules
 output/*
 target
 *.dna
 *.happ
 *.webhapp
+.hc_local_services
+.DS_Store

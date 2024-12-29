@@ -2,10 +2,11 @@ import { Command, MODE } from '@axiosleo/cli-tool';
 import { createServer } from 'vite';
 import fs from 'fs/promises';
 import getPort from 'get-port';
-import { dirname, join } from 'node:path';
+import path from 'node:path';
 
+import generateWeaveConfig from '../../weave/config';
 import generateConfig from '../../vite.config';
-import { runCommand, WDC_PATH } from '../utils';
+import { ensureDir, runCommand, WDC_PATH } from '../utils';
 
 const workingDir = process.cwd();
 const happ = workingDir.split('/').pop()!;
@@ -34,11 +35,11 @@ export default class DevCommand extends Command {
     //  * @param mode option mode : required | optional
     //  * @param default_value only supported on optional mode
     //  */
-    this.addOption('standalone', 's', 'Run as a standalone Holochain app', MODE.OPTIONAL, true);
+    this.addOption('standalone', 's', 'Run as a standalone Holochain app', MODE.OPTIONAL, false);
     this.addOption('agents', 'a', 'Number of agents', MODE.OPTIONAL, 2);
   }
 
-  async exec(args: any, options: any, argList: any, app: any) {
+  async exec(args: any, options: { standalone: boolean; agents: number }, argList: any, app: any) {
     console.log(args, options, argList);
 
     if (!happ) {
@@ -54,14 +55,45 @@ export default class DevCommand extends Command {
     }
 
     const UI_PORT = await getPort();
+    const distPath = path.join(workingDir, './dist');
+    const weaveDist = path.join(distPath, './weave');
+    ensureDir(weaveDist);
 
-    const viteServer = await createServer(
-      generateConfig({ rootPath: workingDir, happ, port: UI_PORT }),
-    );
+    async function startUiServer() {
+      const viteServer = await createServer(
+        generateConfig({ rootPath: workingDir, happ, port: UI_PORT }),
+      );
 
-    await viteServer.listen();
-    viteServer.printUrls();
-    viteServer.bindCLIShortcuts({ print: true });
+      await viteServer.listen();
+      viteServer.printUrls();
+      viteServer.bindCLIShortcuts({ print: true });
+    }
+
+    async function startWeaveServer() {
+      const weaveConfig = generateWeaveConfig({
+        rootPath: workingDir,
+        happ,
+        uiPort: UI_PORT,
+        agents: options.agents,
+      });
+
+      const configPath = path.join(weaveDist, './config.json');
+
+      await fs.writeFile(configPath, JSON.stringify(weaveConfig, null, 2));
+      await Promise.all(
+        [...new Array(options.agents)].map((_, i) => {
+          return runCommand(
+            `cd ${WDC_PATH} && bun run weave --agent-idx ${i + 1} --dev-config ${configPath}`,
+          );
+        }),
+      );
+    }
+
+    await startUiServer();
+    await startWeaveServer();
+
+    // weave --agent-idx 1 --dev-config we_dev/config.ts
+    // weave --agent-idx 2 --dev-config we_dev/config.ts
 
     // async function bulidUi() {
     //   const distPath = join(workingDir, './dist');

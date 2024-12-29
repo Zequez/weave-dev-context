@@ -4,18 +4,12 @@ import path from 'node:path';
 import fs from 'fs/promises';
 import generateConfig from '../vite.config';
 
+const workingDir = process.cwd();
+
 export async function runCommand(cmd: string) {
   console.log('>', cmd);
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, [], { shell: true, stdio: ['inherit', 'inherit', 'inherit'] });
-
-    // child.stdout.on('data', (data) => {
-    //   console.log(`stdout: ${data}`);
-    // });
-
-    // child.stderr.on('data', (data) => {
-    //   console.error(`stderr: ${data}`);
-    // });
 
     child.on('close', (code) => {
       if (code === 0) {
