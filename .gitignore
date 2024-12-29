@@ -1,0 +1,7 @@
+happs/*
+node_modules/*
+output/*
+target
+*.dna
+*.happ
+*.webhapp

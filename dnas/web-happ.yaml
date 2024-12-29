@@ -1,0 +1,7 @@
+---
+manifest_version: "1"
+name: wdc
+ui:
+  bundled: "../output/ui.zip"
+happ_manifest:
+  bundled: "../wdc.happ"

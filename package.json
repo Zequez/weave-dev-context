@@ -1,0 +1,41 @@
+{
+  "name": "weave-dev-context",
+  "module": "scripts/index.ts",
+  "type": "module",
+  "bin": {
+    "wdc": "scripts/index.ts"
+  },
+  "scripts": {
+    "build-ui": "vite build",
+    "pack-ui": "rm -f happs/bar/dist/ui.zip && bun run build-ui && cd happs/bar/dist && bestzip dist.zip *",
+    "build-happ": "bun run build-zomes && pack",
+    "build-zomes": "RUSTFLAGS='' CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown",
+    "pack": "hc app pack dnas --recursive"
+  },
+  "devDependencies": {
+    "@holochain-open-dev/elements": "0.400.0-rc.0",
+    "@holochain-open-dev/profiles": "0.400.0-rc.0",
+    "@holochain-open-dev/stores": "0.400.0-rc.0",
+    "@holochain-open-dev/utils": "0.400.0-rc.0",
+    "@holochain-playground/cli": "^0.300",
+    "@holochain-syn/core": "^0.400.0-rc.2",
+    "@holochain/client": "0.18.0-rc.1",
+    "@holochain/hc-spin": "^0.400.0",
+    "@theweave/api": "0.4.0-alpha.0",
+    "@theweave/cli": "0.13.0-rc.0",
+    "@theweave/elements": "0.4.0-alpha.0",
+    "@types/adm-zip": "^0.5.7",
+    "@types/bun": "latest",
+    "adm-zip": "^0.5.16",
+    "bestzip": "^2.2.1",
+    "concurrently": "^9.0.1",
+    "new-port-cli": "^1.0.0",
+    "vite": "^5.4.10"
+  },
+  "peerDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@axiosleo/cli-tool": "^1.6.5"
+  }
+}
