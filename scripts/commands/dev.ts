@@ -15,7 +15,7 @@ export default class DevCommand extends Command {
   constructor() {
     super({
       name: 'dev',
-      desc: 'Develop the happ, Happ and package the happ',
+      desc: 'Start the Vite UI dev server, and the Weave dev server. It uses the compiled happ files, so make sure you run the build command at least once.',
     });
 
     // /**
