@@ -1,6 +1,7 @@
 import { defineConfig, type AgentSpecifier } from '@theweave/cli';
 import path from 'path';
 import { WDC_PATH } from '../scripts/utils.ts';
+import fs from 'node:fs';
 
 export default function generateConfig({
   rootPath,
@@ -14,6 +15,16 @@ export default function generateConfig({
   agents: number;
 }) {
   if (agents < 1) throw 'Agents must be 1 or more';
+
+  const happIconPng = path.join(rootPath, './icon.png');
+  const happIconSvg = path.join(rootPath, './icon.png');
+  const defaultIcon = path.join(WDC_PATH, './weave/icons/moss-dev.png');
+
+  const iconPath = fs.existsSync(happIconPng)
+    ? happIconPng
+    : fs.existsSync(happIconSvg)
+    ? happIconSvg
+    : defaultIcon;
 
   const joiningAgents = agents - 1;
   const joiningIdx = [...new Array(joiningAgents)].map((_, i) => i + 2);
@@ -104,7 +115,7 @@ export default function generateConfig({
         description: happ,
         icon: {
           type: 'filesystem',
-          path: path.join(rootPath, './icon.png'),
+          path: iconPath,
         },
         source: {
           type: 'localhost',

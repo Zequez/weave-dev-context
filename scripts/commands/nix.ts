@@ -1,6 +1,7 @@
 import { Command } from '@axiosleo/cli-tool';
 import { spawn } from 'child_process';
 import { chdir } from 'process';
+import path from 'node:path';
 
 import { WDC_PATH } from '../utils';
 
@@ -15,8 +16,8 @@ export default class DevCommand extends Command {
   }
 
   async exec(args: any, options: { standalone: boolean; agents: number }, argList: any, app: any) {
-    chdir(WDC_PATH);
-    const nixProcess = spawn('nix', ['develop'], {
+    const flakePath = path.join(WDC_PATH, './flake.nix');
+    const nixProcess = spawn(`nix develop "${WDC_PATH}"`, [], {
       stdio: 'inherit', // Use this to forward input/output to the terminal
       shell: true, // Ensures the command runs in a shell environment
     });
@@ -35,7 +36,5 @@ export default class DevCommand extends Command {
       console.error(`Error starting nix develop: ${err.message}`);
       process.exit(1);
     });
-
-    chdir(workingDir);
   }
 }

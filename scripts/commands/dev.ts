@@ -91,19 +91,5 @@ export default class DevCommand extends Command {
 
     await startUiServer();
     await startWeaveServer();
-
-    // weave --agent-idx 1 --dev-config we_dev/config.ts
-    // weave --agent-idx 2 --dev-config we_dev/config.ts
-
-    // async function bulidUi() {
-    //   const distPath = join(workingDir, './dist');
-    //   await fs.rm(distPath, { recursive: true });
-    //   await viteBuild(generateConfig({ rootPath: workingDir, happ }));
-    //   const zip = new AdmZip();
-    //   zip.addLocalFile(distPath);
-    //   await zip.writeZipPromise(join(distPath, '../ui.zip'));
-    // }
-
-    // await bulidUi();
   }
 }
