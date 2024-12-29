@@ -19,7 +19,7 @@ export default function generateConfig({
     },
     root: rootPath,
     build: {
-      outDir: `./dist`,
+      outDir: `./dist/ui`,
       emptyOutDir: true,
     },
   });

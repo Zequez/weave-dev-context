@@ -2,6 +2,6 @@
 manifest_version: "1"
 name: wdc
 ui:
-  bundled: "../output/ui.zip"
+  bundled: "../ui.zip"
 happ_manifest:
-  bundled: "../wdc.happ"
+  bundled: "./wdc.happ"

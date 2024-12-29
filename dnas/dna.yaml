@@ -5,21 +5,21 @@ name: wdc
 integrity:
   network_seed: ~
   properties:
-    type: "Wdc"
+    type: wdc
   origin_time: 2023-11-03T00:00:00.0Z
   zomes:
     - name: syn_integrity
-      bundled: ../target/wasm32-unknown-unknown/release/syn_integrity.wasm
+      bundled: ../cargo/wasm32-unknown-unknown/release/syn_integrity.wasm
     - name: profiles_integrity
-      bundled: ../target/wasm32-unknown-unknown/release/profiles_integrity.wasm
+      bundled: ../cargo/wasm32-unknown-unknown/release/profiles_integrity.wasm
 
 coordinator:
   zomes:
     - name: syn
-      bundled: ../target/wasm32-unknown-unknown/release/syn.wasm
+      bundled: ../cargo/wasm32-unknown-unknown/release/syn.wasm
       dependencies:
         - name: syn_integrity
     - name: profiles
-      bundled: ../target/wasm32-unknown-unknown/release/profiles.wasm
+      bundled: ../cargo/wasm32-unknown-unknown/release/profiles.wasm
       dependencies:
         - name: profiles_integrity
