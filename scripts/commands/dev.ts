@@ -3,10 +3,13 @@ import { createServer } from 'vite';
 import fs from 'fs/promises';
 import getPort from 'get-port';
 import path from 'node:path';
+import chokidar from 'chokidar';
 
 import generateWeaveConfig from '../../weave/config';
-import generateConfig from '../../vite.config';
-import { ensureDir, runCommand, WDC_PATH } from '../utils';
+import { checkHappIsBuilt, ensureDir, wait, WDC_PATH } from '../utils';
+import { runCommand } from '../coordinator';
+import BuildCommand from './build';
+import originalGenerateConfig from '../../vite.config';
 
 const workingDir = process.cwd();
 const happ = workingDir.split('/').pop()!;
@@ -40,7 +43,7 @@ export default class DevCommand extends Command {
   }
 
   async exec(args: any, options: { standalone: boolean; agents: number }, argList: any, app: any) {
-    console.log(args, options, argList);
+    process.env.NODE_ENV = 'development';
 
     if (!happ) {
       console.error('No named path');
@@ -60,13 +63,39 @@ export default class DevCommand extends Command {
     ensureDir(weaveDist);
 
     async function startUiServer() {
-      const viteServer = await createServer(
-        generateConfig({ rootPath: workingDir, happ, port: UI_PORT }),
-      );
+      const viteConfigPath = path.join(WDC_PATH, 'vite.config.ts');
 
-      await viteServer.listen();
-      viteServer.printUrls();
-      viteServer.bindCLIShortcuts({ print: true });
+      async function getLatestConfig() {
+        delete require.cache[viteConfigPath];
+        const { default: generateConfig } = (await import(viteConfigPath)) as {
+          default: typeof originalGenerateConfig;
+        };
+        return generateConfig({ rootPath: workingDir, happ, port: UI_PORT });
+      }
+
+      let viteServer: Awaited<ReturnType<typeof createServer>>;
+
+      async function startServer() {
+        console.log('Starting UI development server');
+        if (viteServer) await viteServer.close();
+        const latestConfig = await getLatestConfig();
+        viteServer = await createServer(latestConfig);
+
+        await viteServer.listen();
+        viteServer.printUrls();
+        viteServer.bindCLIShortcuts({ print: true });
+      }
+
+      startServer();
+      const watcher = chokidar.watch(viteConfigPath).on('change', (event, path) => {
+        console.log('Vite config changed, restarting...');
+        startServer();
+      });
+
+      process.on('exit', () => {
+        watcher.close();
+        viteServer.close();
+      });
     }
 
     async function startWeaveServer() {
@@ -80,13 +109,21 @@ export default class DevCommand extends Command {
       const configPath = path.join(weaveDist, './config.json');
 
       await fs.writeFile(configPath, JSON.stringify(weaveConfig, null, 2));
-      await Promise.all(
-        [...new Array(options.agents)].map((_, i) => {
-          return runCommand(
-            `cd ${WDC_PATH} && bun run weave --agent-idx ${i + 1} --dev-config ${configPath}`,
-          );
-        }),
-      );
+      for (let i = 0; i < options.agents; ++i) {
+        if (i > 0) {
+          await wait(6);
+        }
+
+        runCommand(
+          `cd ${WDC_PATH} && bun run weave --agent-idx ${i + 1} --dev-config ${configPath}`,
+        );
+      }
+    }
+
+    if (!(await checkHappIsBuilt(happ))) {
+      console.log('DNA not found, building first...');
+      const buildCmd = new BuildCommand();
+      await buildCmd.exec(null, null, null, null);
     }
 
     await startUiServer();

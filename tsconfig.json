@@ -22,6 +22,17 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
-  }
+    "noPropertyAccessFromIndexSignature": false,
+
+    // Paths
+    // "types": ["node_modules/unplugin-icons/types/svelte5.d.ts"],
+  },
+  "include": [
+    "node_modules/unplugin-icons/types/svelte5.d.ts",
+    "vite.config.ts",
+    "unocss.config.ts",
+    "scripts/**/*.ts",
+    "happs/**/*.ts",
+    "happs/**/*.svelte",
+  ]
 }

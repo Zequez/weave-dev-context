@@ -32,4 +32,17 @@ export async function ensureDir(pathname: string) {
 const currentFilePath = fileURLToPath(import.meta.url);
 export const WDC_PATH = path.join(path.dirname(currentFilePath), '../');
 
-// export const HAPPS_PATH = path.resolve(WDC_PATH, 'happs/');
+export function wait(s: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, s * 1000);
+  });
+}
+
+export async function checkHappIsBuilt(name: string) {
+  const file = path.join(workingDir, `./dist/dnas/${name}.happ`);
+  // check if it exists
+  return fs
+    .access(file)
+    .then(() => true)
+    .catch(() => false);
+}
