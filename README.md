@@ -37,8 +37,6 @@ The package is not published on NPM yet so you gotta clone it and then run `bun 
 ## Commands
 
 ```bash
-wdc --help
-
 wdc v0.1.0 Set of commands to use the Weave Dev Context
 
 Usage:
@@ -53,8 +51,9 @@ Global Options:
 Available commands:
 
   build    Build UI, Happ and package the happ
-  dev      Start the Vite UI dev server, and the Weave dev server
+  dev      Start the Vite UI dev server, and the Weave dev server. It uses the compiled happ files, so make sure you run the build command at least once.
   help     Print help information
+  init     Initializes a directory with links and some configuration files
   shell    Enters a Nix development shell with Rust and Holochain installed
 ```
 

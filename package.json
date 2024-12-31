@@ -1,9 +1,9 @@
 {
-  "name": "weave-dev-context",
-  "module": "scripts/index.ts",
+  "name": "wdc",
+  "module": "src/cli.ts",
   "type": "module",
   "bin": {
-    "wdc": "scripts/index.ts"
+    "wdc": "src/cli.ts"
   },
   "scripts": {},
   "devDependencies": {

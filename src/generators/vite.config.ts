@@ -3,8 +3,8 @@ import UnoCSS from 'unocss/vite';
 import Icons from 'unplugin-icons/vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import path from 'node:path';
-import { WDC_PATH } from './scripts/utils.ts';
-import unocssConfig from './unocss.config';
+import { WDC_PATH } from '../utils.ts';
+import unocssConfig from '../../unocss.config.ts';
 
 const unPluginIconsCompilerMap = {
   svelte: 'svelte',

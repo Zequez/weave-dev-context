@@ -1,10 +1,7 @@
 import { Command } from '@axiosleo/cli-tool';
 import { spawn } from 'node:child_process';
-import path from 'node:path';
 
 import { WDC_PATH } from '../utils';
-
-const workingDir = process.cwd();
 
 export default class ShellCommand extends Command {
   constructor() {
@@ -27,20 +24,5 @@ export default class ShellCommand extends Command {
     nixProcess.on('error', (err) => {
       console.error('Failed to start Nix shell:', err);
     });
-
-    // // Handle process events
-    // nixProcess.on('close', (code) => {
-    //   if (code !== 0) {
-    //     console.error(`nix develop exited with code ${code}`);
-    //   } else {
-    //     console.log('Exited nix shell.');
-    //   }
-    //   process.exit(code);
-    // });
-
-    // nixProcess.on('error', (err) => {
-    //   console.error(`Error starting nix develop: ${err.message}`);
-    //   process.exit(1);
-    // });
   }
 }

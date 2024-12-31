@@ -25,14 +25,15 @@
     "noPropertyAccessFromIndexSignature": false,
 
     // Paths
+    "baseUrl": ".",
+    "paths": {
+      // "@wdc/*": ["src/*"],
+      // "@wdc": ["src/index.ts"]
+    }
     // "types": ["node_modules/unplugin-icons/types/svelte5.d.ts"],
   },
   "include": [
-    "node_modules/unplugin-icons/types/svelte5.d.ts",
-    "vite.config.ts",
-    "unocss.config.ts",
-    "scripts/**/*.ts",
-    "happs/**/*.ts",
-    "happs/**/*.svelte",
-  ]
+    "**/*.ts",
+  ],
+  "exclude": ["node_modules"]
 }

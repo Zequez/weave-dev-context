@@ -1,6 +1,6 @@
 import { defineConfig, type AgentSpecifier } from '@theweave/cli';
 import path from 'path';
-import { WDC_PATH } from '../scripts/utils.ts';
+import { WDC_PATH } from '../utils.ts';
 import fs from 'node:fs';
 
 export default function generateConfig({

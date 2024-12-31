@@ -5,11 +5,11 @@ import getPort from 'get-port';
 import path from 'node:path';
 import chokidar from 'chokidar';
 
-import generateWeaveConfig from '../../weave/config';
+import generateWeaveConfig from '../generators/weave.config';
 import { checkHappIsBuilt, ensureDir, wait, WDC_PATH } from '../utils';
 import { runCommand } from '../coordinator';
 import BuildCommand from './build';
-import originalGenerateConfig from '../../vite.config';
+import originalGenerateConfig from '../generators/vite.config';
 
 const workingDir = process.cwd();
 const happ = workingDir.split('/').pop()!;
@@ -63,7 +63,7 @@ export default class DevCommand extends Command {
     ensureDir(weaveDist);
 
     async function startUiServer() {
-      const viteConfigPath = path.join(WDC_PATH, 'vite.config.ts');
+      const viteConfigPath = path.join(WDC_PATH, './src/generators/vite.config.ts');
 
       async function getLatestConfig() {
         delete require.cache[viteConfigPath];
