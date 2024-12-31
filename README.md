@@ -23,6 +23,13 @@ Introducing *Weave* Dev Context
 
 Don't like the convention? Fork it damn it! Use it for all your projects! Share back new commands!
 
+## Prerequisites
+
+- You need Bun installed https://bun.sh/
+- You need Nix installed with Holochain cache goodies https://developer.holochain.org/get-started
+
+(maybe WDC can take care of doing this for you later if you don't have those prerequisites already)
+
 ## How to use
 
 The package is not published on NPM yet so you gotta clone it and then run `bun install` and `bun link` which registers the `wdc` command globally.
@@ -48,7 +55,7 @@ Available commands:
   build    Build UI, Happ and package the happ
   dev      Start the Vite UI dev server, and the Weave dev server
   help     Print help information
-  nix      Enters the Nix shell
+  shell    Enters a Nix development shell with Rust and Holochain installed
 ```
 
 ### Happs Commands
