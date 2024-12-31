@@ -18,7 +18,7 @@ export default function generateConfig({
 
   const happIconPng = path.join(rootPath, './icon.png');
   const happIconSvg = path.join(rootPath, './icon.png');
-  const defaultIcon = path.join(WDC_PATH, './weave/icons/moss-dev.png');
+  const defaultIcon = path.join(WDC_PATH, './assets/icons/moss-dev.png');
 
   const iconPath = fs.existsSync(happIconPng)
     ? happIconPng
@@ -36,7 +36,7 @@ export default function generateConfig({
         networkSeed: '098rc1m-09384u-crm-29384u-cmkj',
         icon: {
           type: 'filesystem',
-          path: path.join(WDC_PATH, './weave/icons/moss-dev.png'),
+          path: path.join(WDC_PATH, './assets/icons/moss-dev.png'),
         },
         creatingAgent: {
           agentIdx: 1,
@@ -44,7 +44,7 @@ export default function generateConfig({
             nickname: 'Dog',
             avatar: {
               type: 'filesystem',
-              path: path.join(WDC_PATH, './weave/icons/dog.png'),
+              path: path.join(WDC_PATH, './assets/icons/dog.png'),
             },
           },
         },
@@ -56,7 +56,7 @@ export default function generateConfig({
                 nickname: 'Cat',
                 avatar: {
                   type: 'filesystem',
-                  path: path.join(WDC_PATH, './weave/icons/cat.png'),
+                  path: path.join(WDC_PATH, './assets/icons/cat.png'),
                 },
               },
             },
@@ -66,7 +66,7 @@ export default function generateConfig({
                 nickname: 'Horse',
                 avatar: {
                   type: 'filesystem',
-                  path: path.join(WDC_PATH, './weave/icons/horse.png'),
+                  path: path.join(WDC_PATH, './assets/icons/horse.png'),
                 },
               },
             },
@@ -76,7 +76,7 @@ export default function generateConfig({
                 nickname: 'Monkey',
                 avatar: {
                   type: 'filesystem',
-                  path: path.join(WDC_PATH, './weave/icons/monkey.png'),
+                  path: path.join(WDC_PATH, './assets/icons/monkey.png'),
                 },
               },
             },
@@ -86,7 +86,7 @@ export default function generateConfig({
                 nickname: 'Pig',
                 avatar: {
                   type: 'filesystem',
-                  path: path.join(WDC_PATH, './weave/icons/pig.png'),
+                  path: path.join(WDC_PATH, './assets/icons/pig.png'),
                 },
               },
             },
