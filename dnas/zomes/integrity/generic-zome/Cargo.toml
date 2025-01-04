@@ -1,0 +1,10 @@
+[package]
+name = "generic_zome_integrity"
+version = "0.0.1"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "generic_zome_integrity"
+
+[dependencies]
+generic_zome_integrity = { git = "https://github.com/holochain-apps/generic-dna", branch = "main" }

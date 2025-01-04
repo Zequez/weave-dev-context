@@ -12,6 +12,8 @@ integrity:
       bundled: ../cargo/wasm32-unknown-unknown/release/syn_integrity.wasm
     - name: profiles_integrity
       bundled: ../cargo/wasm32-unknown-unknown/release/profiles_integrity.wasm
+    - name: generic_zome_integrity
+      bundled: ../cargo/wasm32-unknown-unknown/release/generic_zome_integrity.wasm
 
 coordinator:
   zomes:
@@ -23,3 +25,7 @@ coordinator:
       bundled: ../cargo/wasm32-unknown-unknown/release/profiles.wasm
       dependencies:
         - name: profiles_integrity
+    - name: generic_zome
+      bundled: ../cargo/wasm32-unknown-unknown/release/generic_zome.wasm
+      dependencies:
+        - name: generic_zome_integrity

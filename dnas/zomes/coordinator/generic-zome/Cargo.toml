@@ -1,0 +1,10 @@
+[package]
+name = "generic_zome"
+version = "0.0.1"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "generic_zome"
+
+[dependencies]
+generic_zome = { git = "https://github.com/holochain-apps/generic-dna", branch = "main" }

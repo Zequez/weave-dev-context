@@ -13,9 +13,11 @@ export default class BuildCommand extends Command {
       name: 'build',
       desc: 'Build UI, Happ and package the happ',
     });
+
+    this.addOption('skip-ui', undefined, 'Skip building the UI', MODE.OPTIONAL, false);
   }
 
-  async exec(args: any, options: any, argList: any, app: any) {
+  async exec(args: any, options: { 'skip-ui': boolean }, argList: any, app: any) {
     if (!happDirName) {
       console.error('No named path');
       return;
@@ -34,7 +36,7 @@ export default class BuildCommand extends Command {
     const dnasDist = join(distPath, './dnas');
 
     async function clean() {
-      await rmDir(uiDist);
+      if (!options['skip-ui']) await rmDir(uiDist);
       await ensureDir(uiDist);
       await ensureDir(cargoDist);
       await ensureDir(dnasDist);
@@ -71,7 +73,7 @@ export default class BuildCommand extends Command {
     }
 
     await clean();
-    await bulidUi();
+    if (!options['skip-ui']) await bulidUi();
     await buildCargo();
     await generateDna();
     await packDna();

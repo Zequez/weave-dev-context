@@ -445,6 +445,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "generic_zome"
+version = "0.0.1"
+dependencies = [
+ "generic_zome 0.1.0",
+]
+
+[[package]]
+name = "generic_zome"
+version = "0.1.0"
+source = "git+https://github.com/holochain-apps/generic-dna?branch=main#39d0d4012b36f53d105bb381680d1f820180f87e"
+dependencies = [
+ "generic_zome_integrity 0.1.0",
+ "hdk",
+ "serde",
+]
+
+[[package]]
+name = "generic_zome_integrity"
+version = "0.0.1"
+dependencies = [
+ "generic_zome_integrity 0.1.0",
+]
+
+[[package]]
+name = "generic_zome_integrity"
+version = "0.1.0"
+source = "git+https://github.com/holochain-apps/generic-dna?branch=main#39d0d4012b36f53d105bb381680d1f820180f87e"
+dependencies = [
+ "hdi",
+ "serde",
+]
+
+[[package]]
 name = "getrandom"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
