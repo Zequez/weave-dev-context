@@ -133,7 +133,7 @@ export default function generateConfig({
         },
         source: {
           type: 'https',
-          url: 'https://github.com/holochain-apps/kando/releases/download/v0.10.9/kando.webhapp',
+          url: 'https://github.com/holochain-apps/kando/releases/download/v0.12.0-rc.1/kando.webhapp',
         },
       },
       //   {

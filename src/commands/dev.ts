@@ -123,7 +123,7 @@ export default class DevCommand extends Command {
     if (!(await checkHappIsBuilt(happ))) {
       console.log('DNA not found, building first...');
       const buildCmd = new BuildCommand();
-      await buildCmd.exec(null, null, null, null);
+      await buildCmd.exec(null, { 'skip-ui': false }, null, null);
     }
 
     await startUiServer();

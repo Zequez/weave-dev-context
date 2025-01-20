@@ -28,7 +28,7 @@ export default function generateConfig({
     Icons({ compiler: unPluginIconsCompilerMap[resolvedFramework] as any, defaultClass: 'block' }),
   ];
   if (resolvedFramework === 'svelte') plugins.unshift(svelte());
-  if (resolvedFramework === 'react') console.log('Startin  s with reactt');
+  if (resolvedFramework === 'react') console.log('Starting with reactt');
 
   return defineConfig({
     plugins,
@@ -42,6 +42,9 @@ export default function generateConfig({
     build: {
       outDir: `./dist/ui`,
       emptyOutDir: true,
+    },
+    optimizeDeps: {
+      force: true,
     },
   });
 }

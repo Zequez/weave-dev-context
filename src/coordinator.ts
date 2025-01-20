@@ -22,20 +22,26 @@ function cleanup() {
   process.exit(); // Exit the main process
 }
 
-export async function runCommand(cmd: string) {
+export async function runCommand(cmd: string, prefix = true) {
   console.log('>', cmd);
   return new Promise((resolve, reject) => {
-    const child = spawn(cmd, [], { shell: true, stdio: ['pipe', 'pipe', 'pipe'] });
+    const child = spawn(cmd, [], {
+      shell: true,
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: { ...process.env, FORCE_COLOR: 'true' },
+    });
 
     const i = childProcesses.push(child);
     const color = colors[(i - 1) % colors.length];
 
     child.stdout.on('data', (data) => {
-      process.stdout.write(color(`[${i}] ${data.toString()}`));
+      process.stdout.write(prefix ? color(`[${i}] ${data.toString()}`) : data.toString());
     });
 
     child.stderr.on('data', (data) => {
-      process.stderr.write(chalk.bgRedBright(`[${i}]`) + color(` ${data.toString()}`));
+      process.stderr.write(
+        prefix ? chalk.bgRedBright(`[${i}]`) + color(` ${data.toString()}`) : data.toString(),
+      );
     });
 
     child.on('close', (code) => {
