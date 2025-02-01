@@ -17,7 +17,7 @@ export default function generateConfig({
   if (agents < 1) throw 'Agents must be 1 or more';
 
   const happIconPng = path.join(rootPath, './icon.png');
-  const happIconSvg = path.join(rootPath, './icon.png');
+  const happIconSvg = path.join(rootPath, './icon.svg');
   const defaultIcon = path.join(WDC_PATH, './assets/icons/moss-dev.png');
 
   const iconPath = fs.existsSync(happIconPng)

@@ -23,7 +23,7 @@
     "@theweave/cli": "0.13.0-rc.0",
     "@theweave/elements": "0.4.0-alpha.0",
     "@types/adm-zip": "^0.5.7",
-    "@types/bun": "latest",
+    "@types/bun": "^1.2.1",
     "adm-zip": "^0.5.16",
     "bestzip": "^2.2.1",
     "chalk": "^5.4.1",
@@ -32,6 +32,7 @@
     "concurrently": "^9.0.1",
     "generic-dna": "https://github.com/holochain-apps/generic-dna.git",
     "new-port-cli": "^1.0.0",
+    "prettier": "^3.4.2",
     "svelte": "^5.16.0",
     "unocss": "^0.65.3",
     "unplugin-icons": "^0.22.0",
@@ -41,5 +42,8 @@
   "peerDependencies": {
     "typescript": "^5.6.3"
   },
-  "trustedDependencies": ["@theweave/cli"]
+  "trustedDependencies": ["@theweave/cli"],
+  "dependencies": {
+    "axios": "^1.7.9"
+  }
 }

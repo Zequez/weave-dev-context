@@ -5,6 +5,7 @@ import DevCommand from './commands/dev';
 import ShellCommand from './commands/shell';
 import InitCommand from './commands/init';
 import TestCommand from './commands/test';
+import DeployCommand from './commands/deploy';
 
 const app = new App({
   name: 'wdc', // cli app command name, required
@@ -18,4 +19,5 @@ app.register(DevCommand);
 app.register(ShellCommand);
 app.register(InitCommand);
 app.register(TestCommand);
+app.register(DeployCommand);
 app.start();

@@ -29,11 +29,11 @@
     "paths": {
       // "@wdc/*": ["src/*"],
       // "@wdc": ["src/index.ts"]
-    }
-    // "types": ["node_modules/unplugin-icons/types/svelte5.d.ts"],
+    },
+    "types": ["./node_modules/bun-types", "./node_modules/unplugin-icons/types/svelte5.d.ts", "vite/client"],
   },
   "include": [
     "**/*.ts",
-  ],
-  "exclude": ["node_modules"]
+    "./node_modules/tunplugin-icons/types/svelte5.d.ts",
+  ]
 }
