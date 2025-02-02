@@ -9,7 +9,7 @@ import DeployCommand from './commands/deploy';
 
 const app = new App({
   name: 'wdc', // cli app command name, required
-  version: '0.1.1', // cli app version, required
+  version: '0.1.2', // cli app version, required
   desc: 'Set of commands to use the Weave Dev Context',
   commands_sort: [],
 });

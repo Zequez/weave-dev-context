@@ -5,10 +5,18 @@ What if we collaborated on maintaining a repository responsible for holding *the
 
 Introducing *Weave* Dev Context
 
-(**Disclaimer:** this is very early in development and not all these features are actually real yet)
+### Ethos
 
 - Convention over configuration
-- All batteries included
+- Code sharing and collaboration on the deepest possible level
+- No Rust knowledge by default
+- Pre-packed with useful libraries
+- A single configuration file
+
+(**Disclaimer:** this is very early in development and not all these features are actually real yet)
+
+### What's in the package right now?
+- Useful DNAs
  - Profiles zome
  - Syn zome
  - Generic DNA zome
@@ -16,12 +24,21 @@ Introducing *Weave* Dev Context
 - Vite
  - Multiple UI frameworks to pick from
  - UnoCSS preloaded
-- No Rust knowledge needed by default
-- Add custom DNA if you want to
-- Collaboration on the deepest possible level
-- Pack, deploy to Github or IPFS, and add to Weave curation lists
+ - Iconify unplugin icons
+- Single build and dev commands with options
+- TypeScript pre-configured
+- Bun TS runtime
+- Make Github release automatically with new versions and changelogs, and upload the .webhapp file to it
+- Deploy to curation list automatically and pre-fill a PR to the upstream repo
+- Svelte UI framework support
 
-Don't like the convention? Fork it damn it! Use it for all your projects! Share back new commands!
+### What's in the thinking-oven?
+
+- Possibility to work without Github, using IPFS and pinning services for uploading the .webhapp file; and alternatives to the curations list repos
+- Website for the happ project with a configurable landing page, changelog and releases.
+- Add support for more UI frameworks. Lit, React, Vue, Preact
+- Integrate quality of life store into WDC that can work with Syn or Generic DNA
+
 
 ## Prerequisites
 
@@ -37,7 +54,7 @@ The package is not published on NPM yet so you gotta clone it and then run `bun 
 ## Commands
 
 ```bash
-wdc v0.1.0 Set of commands to use the Weave Dev Context
+wdc v0.1.1 Set of commands to use the Weave Dev Context
 
 Usage:
 
@@ -50,32 +67,21 @@ Global Options:
 
 Available commands:
 
-  build    Build UI, Happ and package the happ
-  dev      Start the Vite UI dev server, and the Weave dev server. It uses the compiled happ files, so make sure you run the build command at least once.
-  help     Print help information
-  init     Initializes a directory with links and some configuration files
-  shell    Enters a Nix development shell with Rust and Holochain installed
+  build     Build UI, Happ and package the happ
+  deploy    Deploy built happ to Weave tool curation list
+  dev       Start the Vite UI dev server, and the Weave dev server. It uses the compiled happ files, so make sure you run the build command at least once.
+  help      Print help information
+  init      Initializes a directory with links and some configuration files
+  shell     Enters a Nix development shell with Rust and Holochain installed
+  test      Start Vitest to test the UI code
 ```
 
-### Happs Commands
+### How to use
 
 - Go to any directory with at least an index.html file.
-- In order for code editors to pick up the TypeScript, Prettier, node_modules and other stuff, you can create projects inside the happs/* directory; that way the code editor will pick up the parent directory configurations. In the future a command to seed or symlink the directory with these files might be added.
-
-
-```bash
- wdc dev --help
-
-Description:
-
-  Start the Vite UI dev server, and the Weave dev server. It uses the compiled happ files, so make sure you run the build command at least once.
-
-Usage:
-
-  dev [options]
-
-Options:
-
-  -s, --standalone    Run as a standalone Holochain app (not working yet)
-  -a, --agents        Number of agents
-```
+- Run `wdc shell` to start a Nix shell
+- Run `wdc init` to copy some files
+- Run `wdc build` to compile the Rust-based DNA to web assembly libraries
+- Run `wdc dev` to start the Vite and Weave dev server with any number of agents
+- If you want to deploy it to a curation list create a wdc.config.ts file
+- Run `wdc deploy`
