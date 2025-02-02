@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import prettier from 'prettier';
 import type { DeveloperCollectiveToolList, ToolCurations } from '@theweave/moss-types';
 import axios from 'axios';
+import open from 'open';
 
 const GH = Bun.env.GITHUB_TOKEN
   ? axios.create({
@@ -13,8 +14,10 @@ const GH = Bun.env.GITHUB_TOKEN
     })
   : null;
 
+// TODO: Don't hardcode it, make it configurable
+export const WEAVE_VERSION = '0.13';
+
 function curationListPaths(happPath: string) {
-  const WEAVE_VERSION = '0.13'; // TODO: Don't hardcode it, make it configurable
   const curationsBasePath = path.join(happPath, `./dist/curation-list/${WEAVE_VERSION}/modify/`);
   const curationsPath = path.join(curationsBasePath, `curations-${WEAVE_VERSION}.ts`);
   const toolListPath = path.join(curationsBasePath, `tool-list-${WEAVE_VERSION}.ts`);
@@ -207,38 +210,39 @@ export async function getGithubRepoReleases(owner: string, repo: string) {
   return response.data;
 }
 
-// export async function createGithubRelease(
-//   owner: string,
-//   repo: string,
-//   branch: string,
-//   tagName: string,
-//   changeLog: string,
-//   webhappFilePath: string,
-// ) {
-//   if (!GH) throw new Error('Missing GITHUB_TOKEN environment variable');
+export function createAndOpenPRUrl(
+  forkOwner: string,
+  forkRepo: string,
+  upstreamOwner: string,
+  upstreamRepo: string,
+  branch: string,
+  title: string,
+  description: string,
+) {
+  const baseUrl = `https://github.com/${forkOwner}/${forkRepo}/compare/${branch}...${upstreamOwner}:${upstreamRepo}:${branch}`;
+  const params = new URLSearchParams({
+    title,
+    body: description,
+    expand: '1',
+  }).toString();
 
-//   try {
-//     await createTag(owner, repo, branch, tagName);
-//     console.log(`Created tag ${tagName} for ${owner}/${repo}:${branch}`);
-//   } catch (e) {
-//     const response = (e as any)?.response!;
-//     if (response && response.status === 422) {
-//       // Do nothing, tag exist
-//       console.log(`Tag ${tagName} for ${owner}/${repo}:${branch} already exist`);
-//     } else {
-//       console.error('Unknown error creating tag');
-//       throw e;
-//     }
-//   }
-// }
+  const prUrl = `${baseUrl}?${params}`;
+  console.log(`Opening PR URL: ${prUrl}`);
+  open(prUrl);
+}
 
-// Type guard for Bun.env.GITHUB_TOKEN
+export function extractOwnerAndRepoFromGithubUrl(url: string) {
+  if (!url.startsWith('https://github.com')) {
+    throw new Error('Must be a Github URL');
+  }
 
-// export function ensureGithubToken() {
-//   if (!Bun.env.GITHUB_TOKEN) {
-//     throw new Error('Missing GITHUB_TOKEN environment variable');
-//   }
-// }
+  const match = url.match(/^https:\/\/github\.com\/([^\/]+)\/([^\/]+)(?:\.git)?/);
+  if (!match) {
+    throw new Error('Invalid GitHub repository URL');
+  }
+
+  return [match[1], match[2]];
+}
 
 //  ██████╗ ████████╗██╗  ██╗███████╗██████╗
 // ██╔═══██╗╚══██╔══╝██║  ██║██╔════╝██╔══██╗

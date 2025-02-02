@@ -20,6 +20,9 @@ import {
   loadCurationListData,
   saveCurationListData,
   extractChangelogContent,
+  WEAVE_VERSION,
+  createAndOpenPRUrl,
+  extractOwnerAndRepoFromGithubUrl,
 } from 'src/lib/deploymentUtils';
 import { existsSync } from 'node:fs';
 
@@ -37,7 +40,8 @@ export default class DeployCommand extends Command {
       root: string;
       id: string;
       //-- Mandatory
-      curationListUrl: string;
+      curationListOriginalUrl: string;
+      curationListForkUrl: string;
       curationListId: string;
       subtitle: string;
       title: string;
@@ -73,7 +77,8 @@ export default class DeployCommand extends Command {
     if (config) {
       const E = (p: string) => errors.push(`Missing ${p} property on wdc.config.ts`);
 
-      if (!config.curationListUrl) E('curationListUrl');
+      if (!config.curationListOriginalUrl) E('curationListOriginalUrl');
+      if (!config.curationListForkUrl) E('curationListForkUrl');
       if (!config.subtitle) E('subtitle');
       if (!config.description) E('description');
       if (!config.githubRepo) E('githubRepo');
@@ -94,7 +99,8 @@ export default class DeployCommand extends Command {
       root: happDirPath,
       //-- Mandatory
       id: config!.id!,
-      curationListUrl: config!.curationListUrl!,
+      curationListOriginalUrl: config!.curationListOriginalUrl!,
+      curationListForkUrl: config!.curationListForkUrl!,
       curationListId: config!.curationListId || config!.id!,
       subtitle: config!.subtitle!,
       title: config!.name || config!.id!,
@@ -117,10 +123,19 @@ export default class DeployCommand extends Command {
 
     const curationsRepoPath = join(happDirPath, 'dist/curation-list');
     if (existsSync(curationsRepoPath)) {
-      // Disabled while testing
-      // await runCommand(`cd ${curationsRepoPath} && git pull`);
+      await updateRepo();
     } else {
-      await runCommand(`git clone ${C.curationListUrl} ${curationsRepoPath}`);
+      await runCommand(`git clone ${C.curationListForkUrl} ${curationsRepoPath}`);
+      await runCommand(
+        `cd ${curationsRepoPath} && git remote add upstream ${C.curationListOriginalUrl}`,
+      );
+      await updateRepo();
+    }
+
+    async function updateRepo() {
+      return await runCommand(
+        `cd ${curationsRepoPath} && git fetch upstream && git checkout main && git reset --hard upstream/main`,
+      );
     }
 
     /************************************************************************* */
@@ -157,7 +172,7 @@ export default class DeployCommand extends Command {
 
     const githubReleaseTag = `v${C.version}`;
     const githubWebhappFileName = `${C.id}.webhapp`;
-    const githubReleaseWebappURL = `${C.githubRepo}/releases/download/${githubReleaseTag}/${githubWebhappFileName}`;
+    const githubReleaseWebappURL = `https://github.com/${C.githubRepo}/releases/download/${githubReleaseTag}/${githubWebhappFileName}`;
 
     /******************************************************** */
     // Compute the hashes using `weave hash-webhapp app.webhapp`
@@ -247,7 +262,47 @@ export default class DeployCommand extends Command {
     await GH.createRelease(C.versionBranch, githubReleaseTag, C.changeLog, webhappFilePath);
 
     /************************************************************************* */
+    // Install curation list dependencies and run validation/generatio command
+    /************************************************************************* */
+
+    const curationListSubrepo = join(curationsRepoPath, WEAVE_VERSION);
+
+    console.log(`Installing curation list dependencies ${curationsRepoPath}`);
+    await Bun.$`cd ${curationListSubrepo} && npm install`;
+
+    console.log('Running curation list code generation');
+    await Bun.$`cd ${curationListSubrepo} && npm run write-lists`;
+
+    console.log('Running curation list tests');
+    await Bun.$`cd ${curationListSubrepo} && npm run test`;
+
+    /************************************************************************* */
     // Make curation list commit, push to Github, and open PR screen
     /************************************************************************* */
+
+    console.log('Making curation list commit');
+    const commitTitle = `Release ${C.title} v${C.version}`;
+    await Bun.$`cd ${curationsRepoPath} && git add -A && git commit -m '${commitTitle}'`;
+
+    console.log('Pushing curation list');
+    await Bun.$`cd ${curationsRepoPath} && git push origin main --force`;
+
+    /************************************************************************* */
+    // Open browser screen with PR for original curation list repo pre-filled
+    /************************************************************************* */
+
+    const [forkOwner, forkRepo] = extractOwnerAndRepoFromGithubUrl(C.curationListOriginalUrl);
+    const [upstreamOwner, upstreamRepo] = extractOwnerAndRepoFromGithubUrl(C.curationListForkUrl);
+
+    console.log('Opening PR for upstream curation list repository');
+    createAndOpenPRUrl(
+      forkOwner,
+      forkRepo,
+      upstreamOwner,
+      upstreamRepo,
+      'main', // Feature branch in the fork
+      commitTitle, // PR title
+      C.changeLog, // PR description
+    );
   }
 }

@@ -6,7 +6,8 @@ export type WdcConfig = {
   description?: string;
   changeLog?: string;
   githubRepo?: string;
-  curationListUrl?: string;
+  curationListOriginalUrl?: string;
+  curationListForkUrl?: string;
   curationListId?: string;
   curationListVersionBranch?: string;
   tags?: string[];
