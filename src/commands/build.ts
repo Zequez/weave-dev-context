@@ -45,7 +45,7 @@ export default class BuildCommand extends Command {
     async function bulidUi() {
       await viteBuild(generateConfig({ rootPath: happDirPath, happ: happDirName }));
       const zip = new AdmZip();
-      zip.addLocalFile(uiDist);
+      zip.addLocalFolder(uiDist);
       await zip.writeZipPromise(join(distPath, './ui.zip'));
     }
 
