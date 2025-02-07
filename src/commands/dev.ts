@@ -58,6 +58,9 @@ export default class DevCommand extends Command {
     }
 
     const UI_PORT = await getPort();
+    const APP_PORT = await getPort();
+    const ADMIN_PORT = await getPort();
+
     const distPath = path.join(workingDir, './dist');
     const weaveDist = path.join(distPath, './weave');
     ensureDir(weaveDist);
@@ -70,7 +73,13 @@ export default class DevCommand extends Command {
         const { default: generateConfig } = (await import(viteConfigPath)) as {
           default: typeof originalGenerateConfig;
         };
-        return generateConfig({ rootPath: workingDir, happ, port: UI_PORT });
+        return generateConfig({
+          rootPath: workingDir,
+          happ,
+          port: UI_PORT,
+          appPort: APP_PORT,
+          adminPort: ADMIN_PORT,
+        });
       }
 
       let viteServer: Awaited<ReturnType<typeof createServer>>;
@@ -96,6 +105,17 @@ export default class DevCommand extends Command {
         watcher.close();
         viteServer.close();
       });
+    }
+
+    async function startStandalone() {
+      const SIGNAL_PORT = await getPort();
+      const BOOTSTRAP_PORT = await getPort();
+      const happPath = path.join(distPath, `dnas/${happ}.happ`);
+      runCommand(`cd ${WDC_PATH} && hc s clean`);
+      runCommand(`cd ${WDC_PATH} && hc run-local-services -b ${BOOTSTRAP_PORT} -s ${SIGNAL_PORT}`);
+      runCommand(
+        `RUST_LOG=warn echo "pass" | hc s -f=${ADMIN_PORT} --piped generate "${happPath}" --run=${APP_PORT} -a ${happ} network -b "http://127.0.0.1:${BOOTSTRAP_PORT}"  webrtc "ws://127.0.0.1:${SIGNAL_PORT}"`,
+      );
     }
 
     async function startWeaveServer() {
@@ -127,6 +147,10 @@ export default class DevCommand extends Command {
     }
 
     await startUiServer();
-    await startWeaveServer();
+    if (options.standalone) {
+      await startStandalone();
+    } else {
+      await startWeaveServer();
+    }
   }
 }

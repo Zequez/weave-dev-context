@@ -15,11 +15,15 @@ export default function generateConfig({
   rootPath,
   happ,
   port,
+  appPort,
+  adminPort,
   framework,
 }: {
   rootPath: string;
   happ: string;
   port?: number;
+  appPort?: number;
+  adminPort?: number;
   framework?: 'svelte' | 'react';
 }) {
   const resolvedFramework = framework || 'svelte';
@@ -37,6 +41,11 @@ export default function generateConfig({
         host: 'localhost',
       },
       port,
+    },
+    define: {
+      'import.meta.env.HAPP': JSON.stringify(happ),
+      'import.meta.env.APP_PORT': appPort,
+      'import.meta.env.ADMIN_PORT': adminPort,
     },
     root: rootPath,
     build: {
